@@ -1,0 +1,27 @@
+{
+  "name": "rpg-server2",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NyanbaVt/rpg-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NyanbaVt/rpg-server/issues"
+  },
+  "homepage": "https://github.com/NyanbaVt/rpg-server#readme",
+  "description": "",
+  "dependencies": {
+    "compression": "^1.8.0",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  }
+}

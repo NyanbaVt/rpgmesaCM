@@ -1,0 +1,1092 @@
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            color: #ffd700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .online-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 30, 50, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+        }
+        
+        .status-indicator.online {
+            background-color: #2ecc71;
+        }
+        
+        .online-users {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .user-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border: 2px solid #fff;
+            cursor: default;
+            position: relative;
+        }
+        
+        .user-badge:hover::after {
+            content: attr(data-name);
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 100;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+        
+        .tools-panel {
+            flex: 1;
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .board-container {
+            flex: 3;
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            overflow: auto;
+            min-height: 600px;
+        }
+        
+        .panel-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #4d9de0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4d9de0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dice-section, .save-section, .map-section {
+            background: rgba(50, 50, 70, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .dice-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .dice-btn {
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+        
+        .dice-btn:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+        }
+        
+        .dice-result {
+            font-size: 1.8rem;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 60px;
+            align-items: center;
+        }
+        
+        .dice-value {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            min-width: 40px;
+            display: inline-block;
+        }
+        
+        .dice-total {
+            background: rgba(231, 76, 60, 0.7);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .dice-history {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .save-controls, .map-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .save-btn, .map-btn {
+            background: #27ae60;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .save-btn.load, .map-btn {
+            background: #2980b9;
+        }
+        
+        .save-btn:hover, .map-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-3px);
+        }
+        
+        .character-creator {
+            background: rgba(50, 50, 70, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .add-token-btn {
+            background: #9b59b6;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .add-token-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-3px);
+        }
+        
+        .dungeon-board {
+            display: grid;
+            gap: 2px;
+            background: #2c3e50;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            min-height: 600px;
+        }
+        
+        .cell {
+            background: rgba(52, 73, 94, 0.7);
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.2s;
+            aspect-ratio: 1/1;
+        }
+        
+        .cell:hover {
+            background: rgba(61, 86, 110, 0.7);
+            transform: scale(0.95);
+        }
+        
+        .token {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            cursor: move;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            z-index: 10;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid;
+            transform-origin: center;
+        }
+        
+        .token.player {
+            border-color: #1a5a8a;
+        }
+        
+        .token.enemy {
+            border-color: #8b2118;
+        }
+        
+        .token.npc {
+            border-color: #1a6b41;
+        }
+        
+        .token.object {
+            border-color: #f39c12;
+            background: radial-gradient(circle, #f1c40f, #f39c12);
+        }
+        
+        .token:hover {
+            transform: scale(1.25);
+            z-index: 20;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        .token-info {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            min-width: 80px;
+            text-align: center;
+            display: none;
+        }
+        
+        .token-hp {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            min-width: 80px;
+            text-align: center;
+            display: none;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .token:hover .token-info,
+        .token:hover .token-hp {
+            display: block;
+        }
+        
+        .tokens-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            justify-content: center;
+        }
+        
+        .sample-token {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            background-size: cover;
+            background-position: center;
+            border: 2px solid;
+            transition: transform 0.2s;
+        }
+        
+        .sample-token:hover {
+            transform: scale(1.1);
+        }
+        
+        .sample-token.player {
+            border-color: #1a5a8a;
+            background: radial-gradient(circle, #3498db, #1a5a8a);
+        }
+        
+        .sample-token.enemy {
+            border-color: #8b2118;
+            background: radial-gradient(circle, #e74c3c, #8b2118);
+        }
+        
+        .sample-token.npc {
+            border-color: #1a6b41;
+            background: radial-gradient(circle, #2ecc71, #1a6b41);
+        }
+        
+        .sample-token.object {
+            border-color: #f39c12;
+            background: radial-gradient(circle, #f1c40f, #f39c12);
+        }
+        
+        .instructions {
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .instructions h2 {
+            color: #4d9de0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .instructions li i {
+            color: #4d9de0;
+            margin-top: 4px;
+        }
+        
+        .dice-animation {
+            display: inline-block;
+            animation: roll 0.5s ease-out;
+        }
+        
+        @keyframes roll {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        /* Nuevos controles */
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .control-group {
+            flex: 1;
+        }
+        
+        .opacity-control {
+            margin-top: 15px;
+        }
+        
+        .opacity-control input {
+            width: 100%;
+        }
+        
+        .token-edit-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 50, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            display: none;
+        }
+        
+        .token-edit-form h3 {
+            margin-bottom: 15px;
+            color: #4d9de0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .form-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .save-btn-form {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .delete-btn-form {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .close-btn-form {
+            background: #7f8c8d;
+            color: white;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .object-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 50, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            display: none;
+        }
+        
+        .object-modal h3 {
+            color: #f39c12;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .object-description {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .object-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .close-object-btn,
+        .edit-object-btn,
+        .delete-object-btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .close-object-btn {
+            background: #7f8c8d;
+            color: white;
+        }
+        
+        .edit-object-btn {
+            background: #3498db;
+            color: white;
+        }
+        
+        .delete-object-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .close-object-btn:hover {
+            background: #636e72;
+        }
+        
+        .edit-object-btn:hover {
+            background: #2980b9;
+        }
+        
+        .delete-object-btn:hover {
+            background: #c0392b;
+        }
+        
+        .user-indicator {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid white;
+            z-index: 30;
+        }
+        
+        .online-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-id-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(30, 30, 50, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #4d9de0;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .join-btn {
+            position: absolute;
+            top: 20px;
+            right: 180px;
+            background: rgba(30, 30, 50, 0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .join-btn:hover {
+            background: rgba(40, 40, 60, 0.9);
+        }
+        
+        .join-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 50, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            display: none;
+        }
+        
+        .join-modal h3 {
+            margin-bottom: 20px;
+            color: #4d9de0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .join-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .join-input input {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .join-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .join-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .join-btn-action {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .cancel-btn-action {
+            background: #7f8c8d;
+            color: white;
+        }
+        
+        .player-management {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background: rgba(30, 30, 50, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            z-index: 100;
+            max-width: 300px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .player-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .kick-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .token {
+                width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+            
+            .token-info, .token-hp {
+                font-size: 0.6rem;
+            }
+            
+            .token-info {
+                bottom: -18px;
+            }
+            
+            .token-hp {
+                top: -18px;
+            }
+            
+            .controls-row {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .dice-btn {
+                padding: 10px 15px;
+                font-size: 1rem;
+            }
+            
+            .object-actions {
+                flex-direction: column;
+            }
+            
+            .online-status {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .game-id-container, .join-btn {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .player-management {
+                position: static;
+                margin-top: 15px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-dragon"></i> Tablero RPG Online</h1>
+            <p class="subtitle">Juega partidas de rol con tus amigos en tiempo real</p>
+            
+            <div class="game-id-container">
+                <span id="gameIdDisplay">ID: Cargando...</span>
+                <button class="copy-btn" id="copyGameId" title="Copiar ID de partida">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+            
+            <div class="join-btn" id="joinGameBtn">
+                <i class="fas fa-user-plus"></i> Unirse a partida
+            </div>
+            
+            <div class="online-status">
+                <div class="status-indicator" id="statusIndicator"></div>
+                <span id="onlineStatus">Conectando...</span>
+                <div class="online-users" id="onlineUsers"></div>
+            </div>
+            
+            <div class="player-management" id="playerManagement" style="display: none;">
+                <h3>Gestión de Jugadores</h3>
+                <div class="player-list" id="playerList"></div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="tools-panel">
+                <h2 class="panel-title"><i class="fas fa-tools"></i> Herramientas</h2>
+                
+                <div class="dice-section">
+                    <h3><i class="fas fa-dice"></i> Sistema de Dados</h3>
+                    <div class="dice-controls">
+                        <button class="dice-btn" id="rollSingle"><i class="fas fa-dice-d6"></i> 1d6</button>
+                        <button class="dice-btn" id="rollDouble"><i class="fas fa-dice-two"></i> 2d6</button>
+                        <button class="dice-btn" id="rollTriple"><i class="fas fa-dice-three"></i> 3d6</button>
+                        <button class="dice-btn" id="clearHistory"><i class="fas fa-trash-alt"></i> Limpiar</button>
+                    </div>
+                    <div class="dice-result">
+                        <span id="currentRoll">-</span>
+                    </div>
+                    <div class="dice-history">
+                        <strong>Historial:</strong>
+                        <div id="diceHistory"></div>
+                    </div>
+                </div>
+                
+                <div class="save-section">
+                    <h3><i class="fas fa-save"></i> Guardar / Cargar</h3>
+                    <div class="save-controls">
+                        <button class="save-btn" id="saveGame"><i class="fas fa-download"></i> Guardar</button>
+                        <button class="save-btn load" id="loadGame"><i class="fas fa-upload"></i> Cargar</button>
+                    </div>
+                    <input type="file" id="gameFile" accept=".json" style="display: none;">
+                </div>
+                
+                <div class="map-section">
+                    <h3><i class="fas fa-map"></i> Configuración del Mapa</h3>
+                    <div class="controls-row">
+                        <div class="control-group">
+                            <label for="rows">Filas:</label>
+                            <input type="number" id="rows" min="5" max="50" value="15">
+                        </div>
+                        <div class="control-group">
+                            <label for="cols">Columnas:</label>
+                            <input type="number" id="cols" min="5" max="50" value="15">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mapImage">Imagen de fondo (opcional):</label>
+                        <input type="file" id="mapImage" accept="image/jpeg, image/jpg, image/png">
+                    </div>
+                    <button class="map-btn" id="loadMap"><i class="fas fa-upload"></i> Cargar Mapa</button>
+                    
+                    <div class="opacity-control">
+                        <label for="cellOpacity">Transparencia de celdas: <span id="opacityValue">70%</span></label>
+                        <input type="range" id="cellOpacity" min="0" max="100" value="70">
+                    </div>
+                </div>
+                
+                <div class="character-creator">
+                    <h3><i class="fas fa-user-plus"></i> Crear Ficha</h3>
+                    <div class="form-group">
+                        <label for="charName">Nombre:</label>
+                        <input type="text" id="charName" placeholder="Introduce nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="charType">Tipo:</label>
+                        <select id="charType">
+                            <option value="player">Jugador</option>
+                            <option value="enemy">Enemigo</option>
+                            <option value="npc">NPC</option>
+                            <option value="object">Objeto</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="hpContainer">
+                        <label for="charHP">Puntos de Vida (HP):</label>
+                        <input type="number" id="charHP" min="1" max="999" value="20">
+                    </div>
+                    
+                    <div class="form-group" id="descContainer" style="display: none;">
+                        <label for="charDesc">Descripción:</label>
+                        <textarea id="charDesc" placeholder="Describe el objeto"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="charImage">Imagen (opcional):</label>
+                        <input type="file" id="charImage" accept="image/*">
+                    </div>
+                    <button class="add-token-btn" id="addToken"><i class="fas fa-plus-circle"></i> Añadir al Tablero</button>
+                </div>
+                
+                <div class="tokens-panel">
+                    <div class="sample-token player" data-type="player" title="Arrastrar jugador">P</div>
+                    <div class="sample-token enemy" data-type="enemy" title="Arrastrar enemigo">E</div>
+                    <div class="sample-token npc" data-type="npc" title="Arrastrar NPC">N</div>
+                    <div class="sample-token object" data-type="object" title="Arrastrar objeto">O</div>
+                </div>
+            </div>
+            
+            <div class="board-container">
+                <h2 class="panel-title"><i class="fas fa-chess-board"></i> Tablero</h2>
+                <div class="dungeon-board" id="gameBoard">
+                    <!-- Las celdas y fichas se generan con JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Instrucciones de Uso</h2>
+            <ul>
+                <li><i class="fas fa-user-plus"></i> <strong>Unirse a partida:</strong> Haz clic en "Unirse a partida" e ingresa el código ID</li>
+                <li><i class="fas fa-share-alt"></i> <strong>Compartir partida:</strong> Copia el ID y compártelo con tus amigos</li>
+                <li><i class="fas fa-crown"></i> <strong>Líder:</strong> El creador de la partida es el líder y puede expulsar jugadores</li>
+                <li><i class="fas fa-dice"></i> <strong>Tirar dados:</strong> Todos los jugadores ven las tiradas en tiempo real</li>
+                <li><i class="fas fa-arrows-alt"></i> <strong>Mover fichas:</strong> Los movimientos se sincronizan con todos los jugadores</li>
+                <li><i class="fas fa-user"></i> <strong>Jugadores:</strong> Los círculos de colores muestran quién controla cada ficha</li>
+                <li><i class="fas fa-save"></i> <strong>Guardar partida:</strong> Guarda el estado actual para continuar más tarde</li>
+            </ul>
+            <p><i class="fas fa-lightbulb"></i> <strong>Consejo:</strong> Todos los cambios se sincronizan automáticamente con los demás jugadores</p>
+        </div>
+    </div>
+    
+    <!-- Formulario de edición de fichas -->
+    <div class="overlay" id="overlay"></div>
+    <div class="token-edit-form" id="tokenEditForm">
+        <h3><i class="fas fa-edit"></i> Editar Ficha</h3>
+        <div class="form-group">
+            <label for="editName">Nombre:</label>
+            <input type="text" id="editName">
+        </div>
+        <div class="form-group" id="editHpContainer">
+            <label for="editHP">Puntos de Vida (HP):</label>
+            <input type="number" id="editHP" min="1" max="999">
+        </div>
+        <div class="form-group" id="editDescContainer" style="display: none;">
+            <label for="editDesc">Descripción:</label>
+            <textarea id="editDesc"></textarea>
+        </div>
+        <div class="form-actions">
+            <button class="save-btn-form" id="saveTokenChanges"><i class="fas fa-save"></i> Guardar</button>
+            <button class="delete-btn-form" id="deleteToken"><i class="fas fa-trash"></i> Eliminar</button>
+            <button class="close-btn-form" id="closeEditForm"><i class="fas fa-times"></i> Cerrar</button>
+        </div>
+    </div>
+    
+    <!-- Modal para objetos -->
+    <div class="object-modal" id="objectModal">
+        <h3><i class="fas fa-cube"></i> Detalles del Objeto</h3>
+        <div class="object-description" id="objectDescription">
+            <!-- La descripción se insertará aquí -->
+        </div>
+        <div class="object-actions">
+            <button class="edit-object-btn" id="editObject"><i class="fas fa-edit"></i> Editar</button>
+            <button class="delete-object-btn" id="deleteObject"><i class="fas fa-trash"></i> Eliminar</button>
+            <button class="close-object-btn" id="closeObjectModal"><i class="fas fa-times"></i> Cerrar</button>
+        </div>
+    </div>
+    
+    <!-- Modal para unirse a partida -->
+    <div class="join-modal" id="joinModal">
+        <h3><i class="fas fa-user-plus"></i> Unirse a Partida</h3>
+        <div class="join-input">
+            <input type="text" id="gameIdInput" placeholder="Ingresa el ID de la partida">
+        </div>
+        <div class="join-actions">
+            <button class="join-btn-action" id="joinGameAction"><i class="fas fa-sign-in-alt"></i> Unirse</button>
+            <button class="cancel-btn-action" id="cancelJoin"><i class="fas fa-times"></i> Cancelar</button>
+        </div>
+    </div>
+    
+    <div class="online-notification" id="onlineNotification">
+        <i class="fas fa-user-plus"></i> <span id="notificationText"></span>
+    </div>
